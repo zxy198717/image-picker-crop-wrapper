@@ -1,6 +1,7 @@
 package im.years.imagepicker;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -36,6 +37,7 @@ public class ImagePickerManager {
 
     protected Activity activity;
     protected android.app.Fragment appFragment;
+    protected Fragment fragment;
 
     private ChosenImage chosenedImage;
     private ImagePickerListener imageChooserListener;
@@ -49,6 +51,10 @@ public class ImagePickerManager {
 
     public ImagePickerManager(android.app.Fragment fragment) {
         this.appFragment = fragment;
+    }
+    
+    public ImagePickerManager(Fragment fragment) {
+        this.fragment = fragment;
     }
 
     public void pickImage(ImagePickerListener l) {
@@ -78,8 +84,11 @@ public class ImagePickerManager {
         if(activity != null) {
             imageChooserManager = new ImageChooserManager(activity,
                     ChooserType.REQUEST_CAPTURE_PICTURE, true);
-        } else {
+        } else if(appFragment != null) {
             imageChooserManager = new ImageChooserManager(appFragment,
+                    ChooserType.REQUEST_CAPTURE_PICTURE, true);
+        } else {
+            imageChooserManager = new ImageChooserManager(fragment,
                     ChooserType.REQUEST_CAPTURE_PICTURE, true);
         }
 
@@ -141,8 +150,11 @@ public class ImagePickerManager {
         if(activity != null) {
             imageChooserManager = new ImageChooserManager(activity,
                     ChooserType.REQUEST_PICK_PICTURE, true);
-        } else {
+        } else if(appFragment != null) {
             imageChooserManager = new ImageChooserManager(appFragment,
+                    ChooserType.REQUEST_PICK_PICTURE, true);
+        } else {
+            imageChooserManager = new ImageChooserManager(fragment,
                     ChooserType.REQUEST_PICK_PICTURE, true);
         }
 
