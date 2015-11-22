@@ -229,6 +229,10 @@ public class ImagePickerManager {
         if(appFragment != null) {
             return appFragment.getActivity();
         }
+        
+        if(fragment != null) {
+            return fragment.getActivity();
+        }
 
         return  null;
     }
