@@ -214,9 +214,13 @@ public class ImagePickerManager {
         if (resultCode == Activity.RESULT_OK) {
 
             if (requestCode == Crop.REQUEST_CROP) {
-                imageChooserListener.onImageChosen(chosenedImage);
+                if(imageChooserListener != null) {
+                    imageChooserListener.onImageChosen(chosenedImage);
+                }
             } else {
-                imageChooserManager.submit(requestCode, result);
+                if(imageChooserManager != null) {
+                    imageChooserManager.submit(requestCode, result);
+                }
             }
         }
     }
