@@ -117,7 +117,11 @@ public class ImagePickerManager {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                cropIns.start(getActivity(), appFragment != null ? appFragment: fragment);
+                                if(appFragment != null) {
+                                    cropIns.start(getActivity(), appFragment);
+                                } else {
+                                    cropIns.start(getActivity(), fragment);
+                                }
                             }
                         });
 
