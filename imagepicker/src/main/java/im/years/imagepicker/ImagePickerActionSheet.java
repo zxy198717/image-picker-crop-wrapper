@@ -12,8 +12,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.PopupWindow;
 
-import com.kbeanie.imagechooser.api.ChosenImage;
-
 /**
  * Created by alvinzeng on 11/6/15.
  */

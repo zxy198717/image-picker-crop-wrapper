@@ -13,7 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
-import com.kbeanie.imagechooser.api.ChosenImage;
+import com.kbeanie.multipicker.api.entity.ChosenImage;
 
 import java.io.File;
 
@@ -48,12 +48,14 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void PickImage(View v) {
+
+
         mImagePickerManager.pickImage(true ,new ImagePickerManager.ImagePickerListener() {
             @Override
             public void onImageChosen(ChosenImage image) {
 
                 final Uri source = Uri.parse(new File(image
-                        .getFileThumbnailSmall()).toString());
+                        .getThumbnailSmallPath()).toString());
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                Log.e("dddddd", image.getFilePathOriginal());
+                Log.e("dddddd", image.getOriginalPath());
             }
 
             @Override
