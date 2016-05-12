@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 
+import com.kbeanie.multipicker.api.CacheLocation;
 import com.kbeanie.multipicker.api.CameraImagePicker;
 import com.kbeanie.multipicker.api.ImagePicker;
 import com.kbeanie.multipicker.api.Picker;
@@ -121,6 +122,7 @@ public class ImagePickerManager {
             }
             imagePicker.shouldGenerateMetadata(true);
             imagePicker.shouldGenerateThumbnails(false);
+            imagePicker.setCacheLocation(CacheLocation.EXTERNAL_CACHE_DIR);
             DisplayMetrics metrics = getActivity().getResources().getDisplayMetrics();
             int w = metrics.widthPixels;
             int h = metrics.heightPixels;
@@ -155,6 +157,7 @@ public class ImagePickerManager {
 
             cameraPicker.shouldGenerateMetadata(true);
             cameraPicker.shouldGenerateThumbnails(false);
+            cameraPicker.setCacheLocation(CacheLocation.EXTERNAL_CACHE_DIR);
             DisplayMetrics metrics = getActivity().getResources().getDisplayMetrics();
             int w = metrics.widthPixels;
             int h = metrics.heightPixels;
