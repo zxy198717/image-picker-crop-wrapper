@@ -157,7 +157,8 @@ public class ImagePickerManager {
 
             cameraPicker.shouldGenerateMetadata(true);
             cameraPicker.shouldGenerateThumbnails(false);
-            cameraPicker.setCacheLocation(CacheLocation.EXTERNAL_CACHE_DIR);
+            // CANNOT
+            //cameraPicker.setCacheLocation(CacheLocation.EXTERNAL_CACHE_DIR);
             DisplayMetrics metrics = getActivity().getResources().getDisplayMetrics();
             int w = metrics.widthPixels;
             int h = metrics.heightPixels;
