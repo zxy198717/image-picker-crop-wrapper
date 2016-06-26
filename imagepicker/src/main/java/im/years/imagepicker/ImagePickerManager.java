@@ -182,6 +182,9 @@ public class ImagePickerManager {
     }
 
     void onImageChosen(com.kbeanie.multipicker.api.entity.ChosenImage chosenImage) {
+        if(imageChooserListener == null) {
+            return ;
+        }
         if (crop) {
             File original = new File(chosenImage.getOriginalPath());
             Uri source = Uri.fromFile(original);
