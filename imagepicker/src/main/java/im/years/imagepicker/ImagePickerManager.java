@@ -2,10 +2,12 @@ package im.years.imagepicker;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 
 import com.kbeanie.multipicker.api.CacheLocation;
@@ -72,19 +74,21 @@ public class ImagePickerManager {
     }
 
     public void pickImage(final boolean crop, final ImagePickerListener l) {
-        new ImagePickerActionSheet(getActivity(), new ImagePickerActionSheet.ImagePickerActionSheetListener() {
-            @Override
-            public void onItemSelected(int index) {
-                switch (index) {
-                    case 0:
-                        takePicture(crop, l);
-                        break;
-                    case 1:
-                        chooseImage(crop, l);
-                        break;
-                }
-            }
-        });
+
+        String[] items = {"拍照", "相册", "取消"};
+
+        new AlertDialog.Builder(getActivity())
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            takePicture(crop, l);
+                        } else if (which == 1) {
+                            chooseImage(crop, l);
+                        }
+                    }
+                })
+                .show();
     }
 
     public void takePicture(final boolean crop, final ImagePickerListener l) {
@@ -182,8 +186,8 @@ public class ImagePickerManager {
     }
 
     void onImageChosen(com.kbeanie.multipicker.api.entity.ChosenImage chosenImage) {
-        if(imageChooserListener == null) {
-            return ;
+        if (imageChooserListener == null) {
+            return;
         }
         if (crop) {
             File original = new File(chosenImage.getOriginalPath());
