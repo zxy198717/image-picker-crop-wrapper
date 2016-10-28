@@ -1,15 +1,20 @@
 package im.years.imagepicker;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
+import android.widget.Toast;
 
+import com.gun0912.tedpermission.TedPermission;
 import com.kbeanie.multipicker.api.CacheLocation;
 import com.kbeanie.multipicker.api.CameraImagePicker;
 import com.kbeanie.multipicker.api.ImagePicker;
@@ -19,6 +24,7 @@ import com.kbeanie.multipicker.api.entity.ChosenImage;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -75,7 +81,7 @@ public class ImagePickerManager {
 
     public void pickImage(final boolean crop, final ImagePickerListener l) {
 
-        String[] items = {"拍照", "相册", "取消"};
+        String[] items = {"拍照", "相册"};
 
         new AlertDialog.Builder(getActivity())
                 .setItems(items, new DialogInterface.OnClickListener() {
@@ -92,6 +98,21 @@ public class ImagePickerManager {
     }
 
     public void takePicture(final boolean crop, final ImagePickerListener l) {
+
+        new TedPermission(getActivity()).setPermissionListener(new com.gun0912.tedpermission.PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                doTakePicture(crop, l);
+            }
+
+            @Override
+            public void onPermissionDenied(ArrayList<String> arrayList) {
+                Toast.makeText(getActivity(), "在设置-应用-"+getApplicationName()+"-权限中开启相机与储存空间权限，以正常使用拍照", Toast.LENGTH_SHORT).show();
+            }
+        }).setPermissions(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
+    }
+
+    private void doTakePicture(final boolean crop, final ImagePickerListener l) {
         this.crop = crop;
         imageChooserListener = l;
 
@@ -106,6 +127,21 @@ public class ImagePickerManager {
     }
 
     public void chooseImage(final boolean crop, final ImagePickerListener l) {
+
+        new TedPermission(getActivity()).setPermissionListener(new com.gun0912.tedpermission.PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                doChooseImage(crop, l);
+            }
+
+            @Override
+            public void onPermissionDenied(ArrayList<String> arrayList) {
+                Toast.makeText(getActivity(), "在设置-应用-"+getApplicationName()+"-权限中开启储存空间权限，以正常使用相册", Toast.LENGTH_SHORT).show();
+            }
+        }).setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
+    }
+
+    private void doChooseImage(final boolean crop, final ImagePickerListener l) {
         this.crop = crop;
         imageChooserListener = l;
         SharedPreferences sp = getSharedPreferences();
@@ -255,6 +291,20 @@ public class ImagePickerManager {
 
     SharedPreferences getSharedPreferences() {
         return getActivity().getSharedPreferences("ImagePickerCache", Activity.MODE_PRIVATE);
+    }
+
+    private String getApplicationName() {
+        PackageManager packageManager = null;
+        ApplicationInfo applicationInfo = null;
+        try {
+            packageManager = getActivity().getApplicationContext().getPackageManager();
+            applicationInfo = packageManager.getApplicationInfo(getActivity().getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            applicationInfo = null;
+        }
+        String applicationName =
+                (String) packageManager.getApplicationLabel(applicationInfo);
+        return applicationName;
     }
 
     @SuppressLint("NewApi")

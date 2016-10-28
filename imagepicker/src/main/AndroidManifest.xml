@@ -2,7 +2,12 @@
 
     <application android:allowBackup="true" android:label="@string/app_name" 
         android:supportsRtl="true">
-
+        <activity
+            android:name="com.gun0912.tedpermission.TedPermissionActivity"
+            xmlns:tools="http://schemas.android.com/tools"
+            tools:replace="android:theme"
+            android:theme="@style/Ted.Theme.Transparent"
+            />
     </application>
 
 </manifest>
