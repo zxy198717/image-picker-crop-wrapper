@@ -21,7 +21,7 @@ import com.kbeanie.multipicker.api.ImagePicker;
 import com.kbeanie.multipicker.api.Picker;
 import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
 import com.kbeanie.multipicker.api.entity.ChosenImage;
-import com.soundcloud.android.crop.Crop;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,6 +59,7 @@ public class ImagePickerManager {
     private CameraImagePicker cameraPicker;
     private ImagePicker imagePicker;
     private boolean crop;
+    private boolean cropSquare;
 
     private ImagePickerManager() {
     }
@@ -73,6 +74,15 @@ public class ImagePickerManager {
 
     public ImagePickerManager(Fragment fragment) {
         this.fragment = fragment;
+    }
+
+    public ImagePickerManager(Fragment fragment, boolean cropSquare) {
+        this.fragment = fragment;
+        this.cropSquare = cropSquare;
+    }
+
+    public void setCropSquare(boolean cropSquare) {
+        this.cropSquare = cropSquare;
     }
 
     public void pickImage(ImagePickerListener l) {
@@ -197,8 +207,8 @@ public class ImagePickerManager {
 
             cameraPicker.shouldGenerateMetadata(true);
             cameraPicker.shouldGenerateThumbnails(false);
-            // CANNOT
-            //cameraPicker.setCacheLocation(CacheLocation.EXTERNAL_CACHE_DIR);
+            cameraPicker.setCacheLocation(CacheLocation.EXTERNAL_CACHE_DIR);
+
             DisplayMetrics metrics = getActivity().getResources().getDisplayMetrics();
             int w = metrics.widthPixels;
             int h = metrics.heightPixels;
@@ -234,13 +244,21 @@ public class ImagePickerManager {
             Uri destination = Uri.fromFile(file);
             chosenImage.setThumbnailSmallPath(cropPath);
 
-            final Crop cropIns = Crop.of(source, destination).asSquare();
+            final UCrop ucrop = UCrop.of(source, destination).withAspectRatio(1, 1);
+
+            UCrop.Options options = new UCrop.Options();
+            if (!this.cropSquare) {
+                options.setFreeStyleCropEnabled(true);
+            }
+            options.setHideBottomControls(true);
+            ucrop.withOptions(options);
+
             if (activity != null) {
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        cropIns.start(activity);
+                        ucrop.start(activity);
                     }
                 });
 
@@ -251,9 +269,9 @@ public class ImagePickerManager {
                     @Override
                     public void run() {
                         if (appFragment != null) {
-                            cropIns.start(getActivity(), appFragment);
+                            ucrop.start(getActivity(), appFragment);
                         } else {
-                            cropIns.start(getActivity(), fragment);
+                            ucrop.start(getActivity(), fragment);
                         }
                     }
                 });
@@ -281,7 +299,7 @@ public class ImagePickerManager {
                     this.crop = sp.getBoolean("CROP", false);
                 }
                 getCameraImagePicker().submit(data);
-            } else if (requestCode == Crop.REQUEST_CROP) {
+            } else if (requestCode == UCrop.REQUEST_CROP) {
                 if (imageChooserListener != null) {
                     imageChooserListener.onImageChosen(chosenedImage);
                 }
