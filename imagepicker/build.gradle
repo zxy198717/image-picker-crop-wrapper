@@ -23,6 +23,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.yalantis:ucrop:2.2.0'
-    compile 'com.kbeanie:multipicker:1.1.3@aar'
+    compile 'com.kbeanie:multipicker:1.1.31@aar'
     compile 'com.github.ParkSangGwon:TedPermission:v1.0.12'
 }
